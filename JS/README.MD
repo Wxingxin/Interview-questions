@@ -10,11 +10,11 @@
 
 # let 和 const 如何解决这些问题?
 
-1. 暂时性死区
+1. 有暂时性死区，不能变量提升
    声明前无法访问
 2. 有块级作用域
    在 if 块内的变量和 for 循环的变量**不会**泄露到外部
-3. let/const 不会成为 window 属性
+3. let/const 声明的变量不会成为 window 属性
 4. 同一作用域内不能重复声明
 5. 区别
    let 可以重新赋值/const 保证变量引用的不变性
@@ -22,10 +22,9 @@
 # 什么是“暂时性死区(TDZ)"？
 
 1. 是什么
-使用 let 和 const 声明的变量在代码块（作用域）开始到变量实际声明位置之间的一段区域。在这段区域内，这些变量虽然在作用域中已经“存在”，但你无法访问它们。
+   使用 let 和 const 声明的变量在代码块（作用域）开始到变量实际声明位置之间的一段区域。在这段区域内，这些变量虽然在作用域中已经“存在”，但你无法访问它们。
 
-2. let const 也会有变量提升，值为undefined。但是不同的是let const 不能够访问
-
+2. let const 也会有变量提升，值为 undefined。但是不同的是 let const 不能够访问
 
 # 讲讲数据类型
 
@@ -35,12 +34,12 @@
 
 # 值类型 vS 引用类型
 
-| 表格 | 值类型 | 引用类型 |
-|-------|-------|-------|
-| 存储地址 | 存储在栈中 | 存储在堆中 |
+| 表格     | 值类型               | 引用类型                     |
+| -------- | -------------------- | ---------------------------- |
+| 存储地址 | 存储在栈中           | 存储在堆中                   |
 | 怎么访问 | 直接访问存储变量的值 | 存储是地址，通过地址去堆中找 |
-| 怎么赋值 | 赋值相当于拷贝这只值 | 将引用地址复制 |
-| 怎么比较 | 存储的值比较 | 引用地址的比较 |
+| 怎么赋值 | 赋值相当于拷贝这只值 | 将引用地址复制               |
+| 怎么比较 | 存储的值比较         | 引用地址的比较               |
 
 # typeof
 
@@ -60,22 +59,37 @@ typeof function() //function ts
 # typeof null 为什么返回"object"?
 
 1. 历史遗留 bug
-2. js 早期中，null 的底层表示 null 指针
-3. 对象的类型标签恰好也是 0，typeof 错误地将其识别为对象
-4. 直接使用 === 判断 null
+2. 在 JavaScript 的早期版本中，null 被定义为原始值，但其类型标签（内部表示）被错误地设置为 000，这恰好是 object 的类型标签。
+3. 当使用 typeof 运算符时，它会检查这个类型标签，因此对 null 返回了"object"。
 
 # 如何准确判断一个值是数组？
 
 1. 使用 Array.isArray()，是数组会返回 Boolean 的 true
+
+2. instanceof Array
+
+```js
+[] instanceof Array; // true
+new Array() instanceof Array; // true
+({}); instanceof Array; // false
+```
+
 2. 最精确的
    Object.prototype.toString.call(),返回操作符用字符串表示
-3. Array.prototype.isPrototypeOf(obj)
-   利用 isPrototypeOfO 方法，判定 Array 是不是在 obj 的原型链中，如果是，则返回 true,否则 false。
 
+```js
+Object.prototype.toString.call([]); // "[object Array]"
+Object.prototype.toString.call({}); // "[object Object]"
+Object.prototype.toString.call("hello"); // "[object String]"
+Object.prototype.toString.call(123); // "[object Number]"
+Object.prototype.toString.call(null); // "[object Null]"
+Object.prototype.toString.call(undefined); // "[object Undefined]"
+```
 
 # ===
 
 1. 值类型：比较值是否相等
+
 2. 引用类型：比较引用/地址是否相等
 
 ```js
@@ -85,27 +99,34 @@ console.log({} === {}); //false 两个独立堆空间
 
 # 为什么要拷贝
 
-1. 避免意外的副作用
+1. 避免意外的副作用:
    修改副本时，不污染原始数据
-2. 实现状态的不可变性
+
+2. 实现状态的不可变性:
    React/Vue 等框架的核心机制
-3. 隔离数据
+
+3. 隔离数据:
    创建完全独立的数据快照
 
 # 深拷贝和浅拷贝的区别?
 
-1. 性能
+1. **性能**
+
    浅拷贝：快，开销小。深拷贝：慢，开销大，需要遍历所有节点。
+
 2. **浅拷贝**
-   创建一个新对象
-   复制原始对象的第一层属性
-   如果属性是值类型，复制值
-   如果属性是引用类型，复制内存地址
+
+   - 创建一个新对象
+   - 复制原始对象的第一层属性
+   - 如果属性是值类型，复制值
+   - 如果属性是引用类型，复制内存地址
+
 3. **深拷贝**
-   创建一个新对象
-   递归地复制所有层级的属性
-   所有引用类型属性都会被重新创建
-   新旧对象完全独立，互不干扰
+
+   - 创建一个新对象
+   - 递归地复制所有层级的属性
+   - 所有引用类型属性都会被重新创建
+   - 新旧对象完全独立，互不干扰
 
 # 浅拷贝
 
@@ -113,11 +134,11 @@ console.log({} === {}); //false 两个独立堆空间
 
 ```js
 const ori = { a: 1, b: { c: 2 } };
-const copy = Object.assign({},ori)
-shallowCopy.a = 10;//修改第一层
-shallowCopy.b.c = 20;//修改嵌套对象
-console.log(original.a);//1（未受影响）
-console.log(original.b.c) ;//20（受到影响！）
+const copy = Object.assign({}, ori);
+shallowCopy.a = 10; //修改第一层
+shallowCopy.b.c = 20; //修改嵌套对象
+console.log(original.a); //1（未受影响）
+console.log(original.b.c); //20（受到影响！）
 ```
 
 2. ...扩展运算符（es6）
@@ -224,10 +245,12 @@ console.log(months);
 # ===
 
 1. 是什么
-   严格相等运算符
+   严格相等运算符 
+
 2. 起作用
    不进行类型转换
    类型和值都相等的时候才返回 true
+
 3. 相比 `==` 的好处
    从源头避免了不确定性
 
@@ -270,7 +293,7 @@ clg(NaN === NaN); //false
 ```
 
 2. 检查方式
-   Number.isNan()
+   Number.isNaN()
 
 # 什么是 this
 
@@ -283,7 +306,7 @@ clg(NaN === NaN); //false
 
 1. 创建一个全新的空对象{}
 2. 新对象的原型链接到构造函数的 prototype
-3. 新创建的空对象作为this的值，并执行构造函数
+3. 新创建的空对象作为 this 的值，并执行构造函数
 4. 如果构造函数返回一个对象，则返回该对象。否则，返回新创建的对象。
 
 ```js

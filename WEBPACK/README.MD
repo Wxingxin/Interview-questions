@@ -1,14 +1,9 @@
----
-
-Webpack 是前端开发中一个非常重要的模块打包工具，在面试中也经常被问到。以下是一些 Webpack 的高频面试题，涵盖了其核心概念、配置、优化和原理等方面。
-
----
 
 ### 核心概念
 
 1.  **Webpack 是什么？它解决了什么问题？**
 
-    - **是什么：** Webpack 是一个现代 JavaScript 应用程序的**静态模块打包器 (Static Module Bundler)**。它会从一个或多个入口点开始，构建一个**依赖图 (dependency graph)**，将项目中的所有模块（JS、CSS、图片、字体等）及其依赖打包成一个或多个最终的 bundle 文件，供浏览器加载。
+    - **是什么：** Webpack 是一个现代 JavaScript 应用程序的**静态模块打包器 (Static Module Bundler)**。它会从一个或多个入口点开始，构建一个**依赖图 (dependency graph)**，将项目中的所有模块（JS、CSS、图片、字体等）**及其依赖**打包成一个或多个最终的 bundle 文件，供浏览器加载。
     - **解决了什么问题：**
       - **模块化兼容性：** 统一处理 CommonJS、ES Modules 等不同模块规范。
       - **资源管理：** 不仅仅打包 JS，还能处理 CSS、图片、字体等非 JS 资源，将它们也视为模块。
@@ -112,15 +107,13 @@ Webpack 是前端开发中一个非常重要的模块打包工具，在面试中
       - **代码分割 (Code Splitting):** 将代码分割成多个块，按需加载。
         - **入口点分割：** 配置多个 `entry`。
         - **动态导入 (Dynamic Imports):** 使用 `import()` 语法实现懒加载。
-        <!-- - **SplitChunksPlugin:** 提取公共模块和第三方库（如 `node_modules`）。 -->
+
       - **Tree Shaking (摇树优化):** 移除 JavaScript 中未使用的代码。需要 ES Module 语法和 `mode: 'production'`。
       - **CSS Tree Shaking：** 使用 `PurgeCSS-webpack-plugin` 移除未使用的 CSS。
       - **TerserWebpackPlugin (JS 压缩):** 混淆、压缩 JavaScript 代码。
       - **MiniCssExtractPlugin (CSS 提取与压缩):** 提取 CSS 到单独文件并压缩。
       - **图片优化：** 压缩图片。
       - **资源压缩 (Gzip/Brotli):** 使用 `CompressionWebpackPlugin` 预压缩资源，服务器直接发送 `.gz` 或 `.br` 文件。
-      <!-- - **Scope Hoisting (作用域提升):** Webpack 3+，将多个模块合并到单个闭包中，减少运行时开销。 -->
-      <!-- - **长效缓存：** 使用 `contenthash` 为文件名，实现浏览器长效缓存。 -->
 
 2.  **什么是 Tree Shaking？它是如何工作的？有什么前提？**
 
