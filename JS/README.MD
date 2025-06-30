@@ -498,10 +498,12 @@ sayHello,sayHey 是被暴露的内部函数
    指定延迟(delay 毫秒)
    执行一次回调函数
    返回数字 ID，用于取消
+
 2. setInterval(callback, delay, ...args)
    每隔指定间隔(delay 毫秒)
    重复执行回调函数
    返回数字 ID，用于取消
+   
 3. 延时显示元素
    动画效果
    周期性数据轮询
